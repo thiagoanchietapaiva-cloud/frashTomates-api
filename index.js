@@ -2,11 +2,24 @@ const express = require("express");
 const cors = require("cors");
 const executarSQL = require("./services");
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'https://react-todolist-35pu.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+app.options('*', cors({
+  origin: 'https://react-todolist-35pu.onrender.com',
+  credentials: true
+}));
+
 app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("API freshTomates no ar");
 });
+
 app.post("/usuarios", async (req, res) => {
   try {
     const { nome, email, senha } = req.body;
@@ -24,6 +37,7 @@ app.post("/usuarios", async (req, res) => {
     res.status(500).json({ mensagem: e.message });
   }
 });
+
 app.post("/login", async (req, res) => {
   try {
     const { email, senha } = req.body;
@@ -39,6 +53,7 @@ app.post("/login", async (req, res) => {
     res.status(500).json({ mensagem: e.message });
   }
 });
+
 app.get("/usuarios", async (req, res) => {
   try {
     const q = await executarSQL("SELECT id, nome, email FROM usuarios");
@@ -47,7 +62,7 @@ app.get("/usuarios", async (req, res) => {
     res.status(500).json({ mensagem: e.message });
   }
 });
-// Salvar avaliação
+
 app.post("/avaliacoes", async (req, res) => {
   try {
     const { usuario_id, filme_id, nota, comentario } = req.body;
@@ -65,6 +80,7 @@ app.post("/avaliacoes", async (req, res) => {
     res.status(500).json({ mensagem: e.message });
   }
 });
+
 app.get("/avaliacoes/:filme_id", async (req, res) => {
   try {
     const { filme_id } = req.params;
@@ -77,5 +93,6 @@ app.get("/avaliacoes/:filme_id", async (req, res) => {
     res.status(500).json({ mensagem: e.message });
   }
 });
+
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => console.log(`Servidor on: ${PORT}`));
