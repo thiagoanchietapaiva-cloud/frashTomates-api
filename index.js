@@ -8,12 +8,7 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-app.use(cors({
-  origin: ['https://react-todolist-35pu.onrender.com', 'http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: false
-}));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 
 const executarSQL = (text, params) => pool.query(text, params);
